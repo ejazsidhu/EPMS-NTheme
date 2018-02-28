@@ -1,0 +1,91 @@
+
+<div class="row">
+    <h3 class="page-header"><i class="fa fa-dashboard fa-fw"></i>Teams</h3>
+</div>
+
+
+    <div class="row" *ngIf="!showTeam">
+        <div class="col-md-12">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <!-- <th>Id</th> -->
+                        <th>Team Name</th>
+                        <th>Manager Name</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let team of teams">
+                        <!-- <td *ngIf="team.id">{{team.id}}</td> -->
+                        <td><a (click)='getAllTeamTimeSheet(team.id)'>{{team.displayName}}</a></td>
+                        <td >{{team.manager.firstName +team.manager.lastName}}</td>
+                       
+                      <!-- <td><button class="btn btn-danger" (click)="deleteTimecard(user)">Delete </button></td> -->
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="showTeam">
+      <div class="row" style="padding:30px">
+          <div  style="padding-bottom:5px;" class="Button-group">
+                <button (click)="getSpecificTeamsheet('today')" class="btn btn-success ">Today</button>
+                <button  (click)="getSpecificTeamsheet('week')" class="btn btn-success ">Week</button>
+                <button (click)="getSpecificTeamsheet('month')" class="btn btn-success ">Month</button>
+                <button *ngIf="!showCustom" class="btn btn-success " (click)="showCustomCalender()" >Custome</button>
+         
+            </div>
+        
+        <div *ngIf="showCustom" >
+
+            <form [formGroup]="myForm" (ngSubmit)="onCustomClick(myDateRange)" novalidate>
+              <my-date-range-picker name="mydaterange"  selected [options]="myDateRangePickerOptions" formControlName="myDateRange" ></my-date-range-picker>
+            <br>  <button type="submit" class="btn btn-success" (click)="onCustomClick(myDateRange)">Fetch</button>
+            </form>   
+      
+          </div>
+
+      </div>
+     
+      <!-- <button (click)="backToList()" class="btn btn-primary btn-sm">Back to List</button> -->
+      <div class="col-md-12">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    
+                    <th>Employee</th>
+                    <th>Email</th>
+                    <th>Total Hours</th>
+                    <th>Worked</th>
+                    <th>Idle</th>
+                    <th>Disputed</th>
+                    <th>Ramining</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let time of timeSRecord">
+                    
+                    <td>{{time.member.firstName}}&nbsp;{{time.member.lastName}}</td>
+                    <td>{{time.member.email}}</td>
+                    <td>{{time.totalMinutes}} </td>
+                     <td>{{time.totalWorked}}</td> 
+                     <td>{{time.totalIdle}}</td>
+                     <td>{{time.totalDisputed}}</td>
+                     <td>{{time.totalRemainingTime}}</td>
+                                        
+                   
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+    </div>
+
+
+<!-- /.row -->
+
+

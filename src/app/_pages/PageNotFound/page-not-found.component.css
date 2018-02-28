@@ -1,0 +1,19 @@
+
+.bodylogin {
+    /* position:absolute; */
+    /* background-repeat: no-repeat; */
+    background-image: url("../../images/4042.jpg");
+     background-color: #cccccc; 
+       width: 100%;  
+      height: 350px; 
+      /* padding-top:15px;
+      padding-left:300px */
+}
+    .bodylogin >p{
+        color: red;
+        margin-left: 57px;
+     font-size: 44px;
+   
+    }
+
+
