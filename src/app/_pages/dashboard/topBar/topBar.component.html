@@ -1,0 +1,107 @@
+<!-- Side Navbar -->
+<nav class="side-navbar">
+    <div class="side-navbar-wrapper">
+        <!-- Sidebar Header    -->
+        <div class="sidenav-header d-flex align-items-center justify-content-center">
+            <!-- User Info-->
+            <div class="sidenav-header-inner text-center">
+                <img src="http://afz-sol.com/images/inf.png" alt="person" class="img-fluid rounded-circle">
+                <h2 class="h5" *ngIf="user_mail">{{fName}} {{lName}}</h2>
+                <span>Web Developer</span>
+                <span class="btn-group">
+                   
+                        <a   routerLink="setting"  class="btn btn-primary btn-sm fa fa-wrench"> </a>
+                        <a routerLink="edit-profile"  class="btn btn-primary btn-sm fa fa-user"></a>
+                        <a routerLink="change-password" class="btn btn-primary btn-sm fa fa-lock"></a>
+                    
+                </span>
+            </div>
+            <!-- Small Brand information, appears on minimized sidebar-->
+            <div class="sidenav-header-logo">
+                <a href="index.html" class="brand-small text-center">
+                    <strong>EP</strong>
+                    <strong class="text-primary">MS</strong>
+                </a>
+            </div>
+        </div>
+        <!-- Sidebar Navigation Menus-->
+        <div class="main-menu">
+            <!-- <h5 class="sidenav-heading">Main</h5> -->
+            <ul id="side-main-menu" class="side-menu list-unstyled">
+                <li *ngIf="!admin_side">
+                    <a href="#exampledropdownDropdown1" aria-expanded="false" data-toggle="collapse">
+                        <i class="icon-interface-windows"></i>Admin Menu</a>
+                    <ul id="exampledropdownDropdown1" class="collapse list-unstyled ">
+
+                        <li>
+                            <a routerLink="all-users">
+                                <i class="fa fa-users"></i>
+                                <span > All Users</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a routerLink="holiday-picker">
+                                <i class="fa fa-calendar"></i>
+                                <span> Pick a Holiday</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <i class="fa fa-users"></i>
+                                <span> Create Memeber</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <i class="fa fa-user"></i>
+                                <span> Invite Member</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a routerLink="dashboard-content-2">
+                        <i class="fa fa-dashboard "></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="timecard">
+                        <i class="fa fa-tasks"></i>
+                        Time Cards Summary 
+                    </a>
+                </li>
+                <!-- <li>
+                            <a routerLink="timecard-3"><i class="fa fa-tasks fa-fw" aria-hidden="true"></i><span [class.onChange]="cahngeValue"> Time Cards Time Span</span> </a>
+                        </li> -->
+                <li>
+                    <a routerLink="team">
+                        <i class="fa fa-users"></i>
+                        Team
+                    </a>
+                </li>
+                <li>
+                    <a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse">
+                        <i class="icon-interface-windows"></i>Organization </a>
+                    <ul id="exampledropdownDropdown" class="collapse list-unstyled ">
+                        <li>
+                            <a routerLink="orgProfile">
+                                <i class="fa fa-users"></i>
+                                <span> Profile</span>
+                            </a>
+
+                        </li>
+                        <li>
+                            <a>
+                                <i class="fa fa-calendar"></i>
+                                <span> Audit log</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+               
+            </ul>
+        </div>
+     
+    </div>
+</nav>

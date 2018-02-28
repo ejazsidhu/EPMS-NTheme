@@ -1,0 +1,74 @@
+<div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title pull-left modal-primary">Alert</h4>
+                <button type="button" class="close pull-right" aria-label="Close" (click)="staticModal.hide()">
+          <span aria-hidden="true">&nbsp;&nbsp;&times;&nbsp;&nbsp;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                {{myMessage}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" (click)="staticModal.hide()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div class="row">
+    <h3 class="page-header"><i class="fa fa-bell fa-fw"></i>Notifications</h3>
+</div>-->
+<div style="padding:25px"></div>
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+
+                <i class="fa fa-bell fa-fw"></i> Notifications
+            </h4>
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <div class="list-group">
+
+
+
+                <div *ngFor="let r of errorList ;let i=index">
+                    <div class="alert alert-warning alert-dismissable">
+                        <a href="#" class="close" data-dismiss="alert" (click)="popError(i)" aria-label="close">&times;</a>
+                        <i class="fa fa-warning fa-fw"></i>
+                        <strong>Error Alert..!</strong>{{r}}
+                    </div>
+
+                </div>
+
+
+
+            </div>
+            <!-- /.list-group -->
+            <!--buton to srollup-->
+            <!--<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>-->
+            <button scrollTo scrollTargetSelector="#top" id="myBtn" title="Go to top">Go to top</button>
+            <div class="list-group">
+
+
+
+                <div *ngFor="let r of popUpList ;let i=index">
+                    <div class="alert alert-success alert-dismissable">
+                        <a href="#" class="close" data-dismiss="alert" (click)="popList(i)" aria-label="close">&times;</a>
+                        <i class="fa fa-check fa-fw"></i>
+                        <strong></strong>{{r}}
+                    </div>
+
+                </div>
+
+
+
+            </div>
+            <!--<a href="#" class="btn btn-default btn-block">View All Alerts</a>-->
+        </div>
+        <!-- /.panel-body -->
+    </div>
+</div>

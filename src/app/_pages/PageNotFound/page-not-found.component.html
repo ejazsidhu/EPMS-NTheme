@@ -1,0 +1,29 @@
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2" style="margin-top:150px" >
+            <div class="bodylogin img-thumbnailpp">
+                <p *ngIf="!sendToDashboard">click <a (click)="goToLogin()">Here....</a> to go to login page</p>
+                <p *ngIf="sendToDashboard">click <a (click)="goToDashboard()">Here....</a> to go to dashboard</p>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div class="row">
+        <div class="col-md-7 col-md-">
+            <div class=" panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title" style="color:red">The page you requested for not found...!</div>
+                </div>
+                <div class="panel-body" id="bodylogin">
+                    <p *ngIf="!sendToDashboard">click  <a     (click)="goToLogin()">Here....</a> to go to login Page</p>
+                    <p *ngIf="sendToDashboard">click  <a    (click)="goToDashboard()">Here....</a> to go to Dashboard</p>
+                    
+                </div>
+               
+            </div>
+        </div>
+    </div>  -->
+</div>

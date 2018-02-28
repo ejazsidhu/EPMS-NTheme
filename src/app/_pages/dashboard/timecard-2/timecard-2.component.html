@@ -1,0 +1,705 @@
+<div id="top" class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog"
+  aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left modal-primary">Alert</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="staticModal.hide()">
+          <span aria-hidden="true">&nbsp;&nbsp;&times;&nbsp;&nbsp;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{myMessage}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="staticModal.hide()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--delete model-->
+<div class="modal fade" bsModal #staticModal2="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Delete Timecard alert..!</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="staticModal2.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{myMessage}}
+
+        <div class="pull-right">
+          <button type="button" class="btn btn-success btn-sm" (click)="staticModal2.hide()">No</button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="OndeleteTimecard();staticModal2.hide()">Yes</button>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!--delete bulk model-->
+<div class="modal fade" bsModal #staticModal3="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Delete Timecard alert..!</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="staticModal3.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {{myMessage}}
+        <div class="pull-right">
+          <button type="button" class="btn btn-success btn-sm" (click)="staticModal3.hide()">No</button>
+          <button type="button" class="btn btn-danger btn-sm" (click)="DeleteAllTimecard();staticModal3.hide()">Yes</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="triggerk" class="alert alert-success alert-dismissable">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <i class="fa fa-comment fa-fw"></i>
+  <strong>{{myMessage}}</strong>
+</div>
+<div class="row">
+  <div class="col-lg-12 col-md-12 flex-lg-last flex-md-first align-self-baseline">
+    <div class="card sales-report">
+      <h2 class="display h4">
+        <i class="fa fa-clock fa-fw"></i>&nbsp;Timecards</h2>
+
+      <div class="row d-flex align-items-md-stretch">
+        <div class="col-md-2">
+          <!-- <label for="timezone">Show:</label> -->
+          <select name="filter" #filter="ngModel" [(ngModel)]="model.filter" class="form-control" (ngModelChange)="onSubmit(model)">
+            <option value="all">&nbsp;All&nbsp;</option>
+            <option value="low">&nbsp;Low&nbsp;</option>
+            <option value="idle">&nbsp;Idle&nbsp;</option>
+            <option value="disputed">&nbsp;disputed&nbsp;</option>
+          </select>
+
+        </div>
+
+        <div class="col-md-4">
+
+          <div *ngIf="changeClass">
+
+            <div style="text-align:center">
+              Loading timecards...
+              <i class="fa fa-spinner fa-spin"></i>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="btn btn-primary btn-sm" (click)="previousData(model)" style="max-height:36px">&lt;</button>
+
+        <div class="col-md-4">
+
+          <my-date-picker (ngModelChange)="onSubmit(model)" placeholder="{{model.date.day+'-'+model.date.month+'-'+model.date.year}}"
+            name="date" #date="ngModel" [options]="myDatePickerOptions" [(ngModel)]="model.date" required></my-date-picker>
+
+        </div>
+        <button style="max-height:36px" class="btn btn-primary btn-sm" [disabled]="model.date.day==todaydate.getDate()" (click)="nextData(model)">&gt;</button>
+
+
+
+      </div>
+
+
+      <div class="" style="padding-top: 0px;">
+
+
+        <div class="row " *ngIf="!changeClass && !noTimeCard" style="padding:10px">
+          <div style="text-align:center">
+            <button [disabled]="!checkBoxCount" (click)="deleteBulkTimecard();staticModal3.show()" class="btn btn-danger pull-left">Delete Now</button>
+          </div>
+        </div>
+        <div class="row" style="color: red; font-size: 25px ;text-align:center">
+          <div class="col-lg-12  col-md-12 col-sm-12" *ngIf="noTimeCard">
+            <p>No timecard available for selected date....!!!</p>
+          </div>
+
+        </div>
+
+
+        <!-- <div class="row" *ngIf="changeClass">
+
+          <div style="text-align:center">
+            Loading timecards...
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+        </div> -->
+
+        <div class="row">
+          <div *ngFor="let t of timecards; let i=index">
+
+            <div class="col-lg-3 col-md-4 col-sm-6" style="max-width:225px">
+              <div class="checkbox checkbox-danger checkbox-square">
+
+                <input id="checkbox{{i}}" type="checkbox" (change)="onchecked($event,t.id)">
+                <label for="checkbox{{i}}"></label>
+
+
+                <p *ngIf="t.timecardTitle.length<22;else extention">
+                  {{t.timecardTitle| slice:0:22}}
+
+                </p>
+                <ng-template #extention>
+                  <p> {{t.timecardTitle| slice:0:20}}...</p>
+                </ng-template>
+
+
+                <!-- <label for="proess Name">{{t.activityEvents[0].processName}}</label> -->
+
+              </div>
+
+              <div class="service thumbnail" style="padding:10px;background-color:#FDEBD0">
+
+                <div class="row" style="font-size:15px ">
+                  <div class="col-lg-10 col-md-10 col-sm-10" *ngIf="t.activityEvents[0]">
+                    <!-- <label for="proess Name">{{t.activityEvents[0].processName}}</label> -->
+                  </div>
+                  <div style="color:red; font-size:20px" class="col-lg-10 col-md-10 col-sm-10" *ngIf="!t.activityEvents[0]">
+                    NA
+                  </div>
+
+                  <div class=" col-lg-2 col-md-2">
+                    <button class="btn btn-primary btn-sm pull-right" type="submit" data-toggle="modal" data-target="#selectedImageModal" (click)=setSelectedImage(t)>
+                      <i class="fa fa-info" aria-hidden="true"></i>
+                    </button>
+                  </div>
+
+
+                </div>
+
+                <div class="row service">
+                  <!--  -->
+
+
+                  <div *ngIf="t.imageEvents.length>0 " class="col-lg-6 col-md-6 col-sm-6">
+
+
+                    <div *ngIf="t.imageEvents[0] && t.imageEvents[0].hasOwnProperty('eventType') && t.imageEvents[0].eventType === 'WEB_CAM_EVENT'; else NoImage"
+                      style="padding:5px;text-align:center">
+
+                      <img class="img-thumbnail" src="//{{ip}}:{{port}}/{{t.imageEvents[0].imagePath}}" alt="Image Not Found" data-toggle="modal"
+                        data-target="#selectedImageModal2" (click)=setSelectedImage(t)>
+                    </div>
+
+                    <ng-template #NoImage>
+                      <div style="text-align:center;padding-top:5px">
+                        <img style="text-align:center" class="img-thumbnail" src="http://afz-sol.com/images/inf.png" alt="Image Not Found" data-toggle="modal"
+                          data-target="#selectedImageModal2" (click)=setSelectedImage(t)>
+                      </div>
+                    </ng-template>
+
+
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-6 pull-left">
+                    <div class="row" style="padding:10px">
+                      <i class="fa fa-clock-o fa-fw"></i>{{t.timestamp | date:'shortTime'}}
+                    </div>
+                    <div class="row" style="padding:10px">
+                      <i class="fa fa-mouse-pointer"></i> {{t.totalMouseCount}}
+                    </div>
+                    <div class="row" style="padding:10px">
+                      <i class="fa fa-keyboard-o"></i> {{t.totalKeypressCount}}
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row" *ngIf="t.disputed">
+                  <div class="col-lg-12 col-md-12">
+                    <div class="progress active ">
+
+                      <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"
+                        style="width:100%; font-size:15px;padding:0 10">
+                        Disputed
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div class="row" *ngIf="!t.disputed">
+                  <div class="col-lg-12">
+                    <!--activity strenght-->
+
+                    <!--<label for="ActivityStrength" class="control-label" style="padding-bottom:6px"> Activity Strength </label>-->
+
+                    <div *ngIf="actStrength(t) <= 10" class="progress">
+
+                      <div role="progressbar" style="width: 100%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar bg-danger">Idle</div>
+
+                    </div>
+                    <div *ngIf="actStrength(t) > 10 && actStrength(t) <= 100" class="progress">
+
+
+                      <div role="progressbar" style="width: 75%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar bg-warning">Low Activity</div>
+
+                    </div>
+                    <div *ngIf="actStrength(t) > 100 " class="progress">
+
+                      <div role="progressbar" style="width: 100%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" class="progress-bar progress-bar bg-primary">Good Activity</div>
+
+                    </div>
+                    <!--activity strenght-->
+                  </div>
+                </div>
+                <!--  </div>
+                    </div> -->
+                <div class="row service">
+
+                  <div *ngIf="t.imageEvents.length>0" class="col-lg-12 col-md-12">
+
+
+                    <div *ngIf="t.imageEvents[1] && t.imageEvents[1].hasOwnProperty('eventType') && t.imageEvents[1].eventType === 'SCREEN_SHOT_EVENT';else NoImage"
+                      style="padding:5px;text-align:center">
+
+                      <img class="img-thumbnail" src="//{{ip}}:{{port}}/{{t.imageEvents[1].imagePath}}" alt="Image Not Found" data-toggle="modal"
+                        data-target="#selectedImageModal" (click)=setSelectedImage(t)>
+                    </div>
+                    <ng-template #NoImage>
+                      <div style="text-align:center;padding-top:5px">
+                        <img style="text-align:center" class="img-thumbnail" src="http://afz-sol.com/images/inf.png" alt="Image Not Found" data-toggle="modal"
+                          data-target="#selectedImageModal" (click)=setSelectedImage(t)>
+                      </div>
+                    </ng-template>
+
+
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+
+
+
+          <!--buton to srollup-->
+          <!-- <button scrollTo scrollTargetSelector="#top" id="myBtn" title="Go to top">Go to top</button> -->
+          <!--timecard end-->
+          <!--calender ends-->
+          <div class="row">
+            <!--screenshots and info btn-->
+            <div class="modal fade" id="selectedImageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel" *ngIf="selectedImage">
+                      {{selectedImage.timecardTitle}}
+                      <small>
+                        <br/>{{selectedImage.timestamp |date:'medium'}}</small>
+
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="selectedImage" *ngIf="selectedImage">
+                      <ul class="nav nav-pills" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link" data-toggle="tab" href="#web2" role="tab">Webcam</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link active" data-toggle="tab" href="#screen2" role="tab">Screenshot</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" data-toggle="tab" href="#activity2" role="tab">Activity events</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" data-toggle="tab" href="#disputed" role="tab">Disputed</a>
+                        </li>
+                      </ul>
+
+                      <!-- Tab panes -->
+                      <div class="tab-content">
+
+                        <div style="position:absolute;left:0;right:0;top:50px" (click)=navigate(false)>
+                          <i *ngIf="firstTimecard && selectedImage.id!=firstTimecard.id" class="fa fa-caret-square-o-left fa-3x" aria-hidden="true"></i>
+                          <!-- <button class="btn"><strong>&lt;</strong></button> -->
+                        </div>
+
+                        <div style="position:absolute;left:94%;right:0;top:50px" (click)=navigate(true)>
+                          <i *ngIf="lastTimecard && selectedImage.id!=lastTimecard.id" class="fa fa-caret-square-o-right fa-3x" aria-hidden="true"></i>
+                          <!-- <button class="btn btn-danger"><strong>&gt;</strong></button> -->
+                        </div>
+
+                        <div class="tab-pane active" id="web2" role="tabpanel">
+
+                          <!-- 'WEB_CAM_EVENT' -->
+                          <!-- 'SCREEN_SHOT_EVENT' -->
+                          <div *ngIf="selectedImage.imageEvents[0] && selectedImage.imageEvents[0].hasOwnProperty('eventType') && selectedImage.imageEvents[0].eventType === 'WEB_CAM_EVENT';else NoImage"
+                            style="padding:5px;text-align:center">
+
+                            <img class="img-thumbnail" src="//{{ip}}:{{port}}/{{selectedImage.imageEvents[0].imagePath}}" alt="Image Not Found">
+                          </div>
+                          <ng-template #NoImage>
+                            <div style="text-align:center;padding-top:5px">
+                              <img style="text-align:center" class="img-thumbnail" src="http://afz-sol.com/images/inf.png" alt="Image Not Found">
+                            </div>
+                          </ng-template>
+
+
+                          <!--length end  -->
+                        </div>
+                        <!-- webtab ends -->
+                        <div class="tab-pane" id="screen2" role="tabpanel">
+
+                          <!-- 'SCREEN_SHOT_EVENT' -->
+                          <div *ngIf="selectedImage.imageEvents[1] && selectedImage.imageEvents[1].hasOwnProperty('eventType') && selectedImage.imageEvents[1].eventType === 'SCREEN_SHOT_EVENT';else NoImage"
+                            style="padding:5px;text-align:center">
+
+                            <img class="img-thumbnail" src="//{{ip}}:{{port}}/{{selectedImage.imageEvents[1].imagePath}}" alt="Image Not Found">
+                          </div>
+                          <ng-template #NoImage>
+                            <div style="text-align:center;padding-top:5px">
+                              <img style="text-align:center" class="img-thumbnail" src="http://afz-sol.com/images/inf.png" alt="Image Not Found">
+                            </div>
+                          </ng-template>
+                        </div>
+                        <div class="tab-pane" id="activity2" role="tabpanel">
+                          <table class="table" style="text-align: center">
+                            <tr>
+                              <th>SR.#</th>
+                              <th>Time</th>
+                              <th>&nbsp;</th>
+                              <th>Active pocess</th>
+                              <th>Mouse count</th>
+                              <th>Key press</th>
+                            </tr>
+
+                            <tr *ngFor="let d of returnOnlyActivityEvent(selectedImage.activityEvents); let i=index">
+
+                              <td>{{i+1}}</td>
+                              <td *ngIf="!d.timestamp">Not Found</td>
+                              <td *ngIf="d.timestamp">{{d.timestamp | date:'mediumTime'}}</td>
+                              <tooltip-content #myTooltip [animation]="true" placement="left" style="overflow: scroll">
+                                <b>
+                                  <i>
+                                    <span style="color: #ffc520">{{d.activeWindowTitle}}</span>
+                                  </i>
+                                </b>
+                              </tooltip-content>
+                              <td *ngIf="!d.processName">Not Found</td>
+                              <td *ngIf="d.processName" [tooltip]="myTooltip">{{ d.processName }}</td>
+                              <td *ngIf="!d.mouseClicksCount">0</td>
+                              <td *ngIf="d.mouseClicksCount">{{d.mouseClicksCount+d.mouseWheelCount}}</td>
+
+                              <td *ngIf="!d.keyPressCount">0</td>
+                              <td *ngIf="d.keyPressCount > 0">{{d.keyPressCount}}</td>
+
+                            </tr>
+
+                          </table>
+
+                        </div>
+                        <div class="tab-pane" id="disputed" role="tabpanel">
+
+                          <form [formGroup]="form" class="form-horizontal">
+                            <!--Disputed-->
+                            <div class="row" style="padding-top:10px">
+                              <div class="col-md-8">
+                                <label for="">Diputed Comment</label>
+
+                                <div class="input-group">
+                                  <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-comment"></i>
+                                  </span>
+
+                                  <textarea rows="5" cols="10" [formControl]="disputedReply" class="form-control" placeholder="{{selectedImage.disputeReplyComments}}">
+                                              </textarea>
+
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <button style=" margin-top: 33px;" class="btn btn-success" (click)="onDisputeFormSubmit(selectedImage.id,form.value,'dispute')">
+                                  Mark Disputed</button>
+
+                              </div>
+
+                            </div>
+                            <!--Disputed end-->
+                            <div class="row" style="padding-top:10px">
+
+                              <div class="col-md-8">
+
+                                <label for="">Clarefication</label>
+
+                                <div class="input-group">
+                                  <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-comment"></i>
+                                  </span>
+                                  <textarea [formControl]="disputedReply" class="form-control" placeholder="{{selectedImage.disputeReplyComments}}">
+                                            </textarea>
+
+                                </div>
+                              </div>
+                              <div class="col-md-2">
+                                <button style="margin-top: 33px;" class="btn btn-primary" (click)="onDisputeFormSubmit(selectedImage.id,form.value,'dispute_Reply')">Dispute Reply</button>
+                              </div>
+                              <!--dispute_Reply-->
+                            </div>
+                            <div class="row" style="padding-top:10px">
+
+                              <div class="col-md-8">
+                                <label for="">Dispute Resolve Comment</label>
+
+                                <div class="input-group">
+                                  <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-comment"></i>
+                                  </span>
+                                  <textarea [formControl]="disputedSettleComment" class="form-control" placeholder="{{selectedImage.disputeResolveComments}}"></textarea>
+                                </div>
+                              </div>
+                              <div class="col-md-4">
+                                <button style="margin-top:33px" class="btn btn-success" (click)="onDisputeFormSubmit(selectedImage.id,form.value,'Approved')">Approve</button>
+                                <button style="margin-top:33px" class="btn btn-danger" (click)="onDisputeFormSubmit(selectedImage.id,form.value,'Rejected')">Reject</button>
+
+                              </div>
+
+                            </div>
+
+                          </form>
+
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--screenshots and info btn-->
+            <!--webcam-->
+            <div class="modal fade" id="selectedImageModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel" *ngIf="selectedImage">
+                      {{selectedImage.timecardTitle}}
+                      <small>
+                        <br/>{{selectedImage.timestamp |date:'medium'}}</small>
+
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="selectedImage" *ngIf="selectedImage">
+                      <ul class="nav nav-pills" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active" data-toggle="tab" href="#web2" role="tab">Webcam</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" data-toggle="tab" href="#screen2" role="tab">Screenshot</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" data-toggle="tab" href="#activity2" role="tab">Activity events</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" data-toggle="tab" href="#disputed" role="tab">Disputed</a>
+                        </li>
+                      </ul>
+
+                      <!-- Tab panes -->
+                      <div class="tab-content">
+
+                        <div style="position:absolute;left:0;right:0;top:50px" (click)=navigate(false)>
+                          <i *ngIf="firstTimecard && selectedImage.id!=firstTimecard.id" class="fa fa-caret-square-o-left fa-3x" aria-hidden="true"></i>
+                          <!-- <button class="btn"><strong>&lt;</strong></button> -->
+                        </div>
+
+                        <div style="position:absolute;left:94%;right:0;top:50px" (click)=navigate(true)>
+                          <i *ngIf="lastTimecard && selectedImage.id!=lastTimecard.id" class="fa fa-caret-square-o-right fa-3x" aria-hidden="true"></i>
+                          <!-- <button class="btn btn-danger"><strong>&gt;</strong></button> -->
+                        </div>
+
+                        <div class="tab-pane active" id="web2" role="tabpanel">
+
+                          <!-- 'WEB_CAM_EVENT' -->
+                          <!-- 'SCREEN_SHOT_EVENT' -->
+                          <div *ngIf="selectedImage.imageEvents[0] && selectedImage.imageEvents[0].hasOwnProperty('eventType') && selectedImage.imageEvents[0].eventType === 'WEB_CAM_EVENT';else NoImage"
+                            style="padding:5px;text-align:center">
+
+                            <img class="img-thumbnail" src="//{{ip}}:{{port}}/{{selectedImage.imageEvents[0].imagePath}}" alt="Image Not Found">
+                          </div>
+                          <ng-template #NoImage>
+                            <div style="text-align:center;padding-top:5px">
+                              <img style="text-align:center" class="img-thumbnail" src="http://afz-sol.com/images/inf.png" alt="Image Not Found">
+                            </div>
+                          </ng-template>
+
+
+                          <!--length end  -->
+                        </div>
+
+                        <!-- webtab ends -->
+
+                        <div class="tab-pane" id="screen2" role="tabpanel">
+
+                          <!-- 'SCREEN_SHOT_EVENT' -->
+                          <div *ngIf="selectedImage.imageEvents[1] && selectedImage.imageEvents[1].hasOwnProperty('eventType') && selectedImage.imageEvents[1].eventType === 'SCREEN_SHOT_EVENT';else NoImage"
+                            style="padding:5px;text-align:center">
+
+                            <img class="img-thumbnail" src="//{{ip}}:{{port}}/{{selectedImage.imageEvents[1].imagePath}}" alt="Image Not Found">
+                          </div>
+                          <ng-template #NoImage>
+                            <div style="text-align:center;padding-top:5px">
+                              <img style="text-align:center" class="img-thumbnail" src="http://afz-sol.com/images/inf.png" alt="Image Not Found">
+                            </div>
+                          </ng-template>
+                        </div>
+                        <div class="tab-pane" id="activity2" role="tabpanel">
+                          <table class="table" style="text-align: center">
+                            <tr>
+                              <th>SR.#</th>
+                              <th>Time</th>
+                              <th>&nbsp;</th>
+                              <th>Active pocess</th>
+                              <th>Mouse count</th>
+                              <th>Key press</th>
+                            </tr>
+
+                            <tr *ngFor="let d of returnOnlyActivityEvent(selectedImage.activityEvents); let i=index">
+
+                              <td>{{i+1}}</td>
+                              <td *ngIf="!d.timestamp">Not Found</td>
+                              <td *ngIf="d.timestamp">{{d.timestamp | date:'mediumTime'}}</td>
+                              <tooltip-content #myTooltip [animation]="true" placement="left" style="overflow: scroll">
+                                <b>
+                                  <i>
+                                    <span style="color: #ffc520">{{d.activeWindowTitle}}</span>
+                                  </i>
+                                </b>
+                              </tooltip-content>
+                              <td *ngIf="!d.processName">Not Found</td>
+                              <td *ngIf="d.processName" [tooltip]="myTooltip">{{ d.processName }}</td>
+                              <td *ngIf="!d.mouseClicksCount">0</td>
+                              <td *ngIf="d.mouseClicksCount">{{d.mouseClicksCount+d.mouseWheelCount}}</td>
+
+                              <td *ngIf="!d.keyPressCount">0</td>
+                              <td *ngIf="d.keyPressCount > 0">{{d.keyPressCount}}</td>
+
+                            </tr>
+
+                          </table>
+
+                        </div>
+                        <div class="tab-pane" id="disputed" role="tabpanel">
+                            <form [formGroup]="form" class="form-horizontal">
+                                <!--Disputed-->
+                                <div class="row" style="padding-top:10px">
+                                  <div class="col-md-8">
+                                    <label for="">Diputed Comment</label>
+    
+                                    <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-comment"></i>
+                                      </span>
+    
+                                      <textarea rows="5" cols="10" [formControl]="disputedReply" class="form-control" placeholder="{{selectedImage.disputeReplyComments}}">
+                                                  </textarea>
+    
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <button style=" margin-top: 33px;" class="btn btn-success" (click)="onDisputeFormSubmit(selectedImage.id,form.value,'dispute')">
+                                      Mark Disputed</button>
+    
+                                  </div>
+    
+                                </div>
+                                <!--Disputed end-->
+                                <div class="row" style="padding-top:10px">
+    
+                                  <div class="col-md-8">
+    
+                                    <label for="">Clarefication</label>
+    
+                                    <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-comment"></i>
+                                      </span>
+                                      <textarea [formControl]="disputedReply" class="form-control" placeholder="{{selectedImage.disputeReplyComments}}">
+                                                </textarea>
+    
+                                    </div>
+                                  </div>
+                                  <div class="col-md-2">
+                                    <button style="margin-top: 33px;" class="btn btn-primary" (click)="onDisputeFormSubmit(selectedImage.id,form.value,'dispute_Reply')">Dispute Reply</button>
+                                  </div>
+                                  <!--dispute_Reply-->
+                                </div>
+                                <div class="row" style="padding-top:10px">
+    
+                                  <div class="col-md-8">
+                                    <label for="">Dispute Resolve Comment</label>
+    
+                                    <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-comment"></i>
+                                      </span>
+                                      <textarea [formControl]="disputedSettleComment" class="form-control" placeholder="{{selectedImage.disputeResolveComments}}"></textarea>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <button style="margin-top:33px" class="btn btn-success" (click)="onDisputeFormSubmit(selectedImage.id,form.value,'Approved')">Approve</button>
+                                    <button style="margin-top:33px" class="btn btn-danger" (click)="onDisputeFormSubmit(selectedImage.id,form.value,'Rejected')">Reject</button>
+    
+                                  </div>
+    
+                                </div>
+    
+                              </form>
+    
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--web cam-->
+
+          </div>
+          <div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
